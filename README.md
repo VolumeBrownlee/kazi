@@ -208,3 +208,32 @@ Near-term work:
 - Real-device notification scheduling and install prompts.
 - Optional encrypted backup.
 - Hosted, opt-in sync for multi-device use.
+
+---
+
+## Use it, fork it, change it
+
+Kazi is public and MIT-licensed. Anyone can:
+
+- use the [live app](https://kazi-joshuaajuna05-6109s-projects.vercel.app),
+- fork the [repository](https://github.com/VolumeBrownlee/kazi) and change it,
+- deploy their own copy for a team, a community or themselves,
+- contribute a fix, a parser rule or a feature back upstream.
+
+### Deploy your own copy
+
+1. Fork [VolumeBrownlee/kazi](https://github.com/VolumeBrownlee/kazi).
+2. Import the fork at [vercel.com/new](https://vercel.com/new). Leave the **Root Directory** as the repository root and the framework preset as **Other**.
+3. Deploy. There is no build command, no database and no account system.
+
+AI is optional. Without `AI_API_KEY`, the deployment still works and uses the local parsers and generators. To enable AI, add the variables described in [Publish it](#publish-it), then redeploy.
+
+### Contribute
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) for the setup, the checks, the project map and the design and privacy rules. Small fixes can go straight to a pull request. For a larger feature, open an issue first so the approach can be agreed before you build it.
+
+Bug reports, feature requests, parser examples and accessibility notes are all useful. If you are not sure where to start, open an issue and ask.
+
+## License
+
+MIT — see [LICENSE](LICENSE). You can use, modify and distribute Kazi, including commercially, as long as the copyright notice is kept.

@@ -1,0 +1,30 @@
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run parser tests
+        run: npm test
+
+      - name: Check JavaScript syntax
+        run: |
+          for file in js/*.js api/*.js sw.js; do
+            node --check "$file"
+          done

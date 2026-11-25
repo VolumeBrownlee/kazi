@@ -1,0 +1,57 @@
+name: Feature request
+description: Suggest a capability, a parser rule or an improvement.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the problem first. A clear problem is more useful than a fully specified solution.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Who is stuck, and at what point?
+      placeholder: When I paste a forwarded message from..., Kazi...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you have considered
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Capture and parsing
+        - Pipeline and Today
+        - Replies and calendar
+        - CV and cover letters
+        - People and documents
+        - Settings, backup and install
+        - AI
+        - Accessibility and design
+        - Documentation
+        - Something else
+    validations:
+      required: true
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Fit with Kazi
+      options:
+        - label: This can work offline and without AI.
+        - label: This does not require analytics, tracking or a third-party script.
+        - label: I am willing to help test or implement this.
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?
+      description: Mockups, examples, links or edge cases.
