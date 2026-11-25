@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Kazi · The Steady Hand · Design board 01</title>
+  <link rel="stylesheet" href="steady-hand.css">
+</head>
+<body>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M20 12H5M11 6l-6 6 6 6"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-today" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></symbol>
+    <symbol id="i-pipeline" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="8" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="18" r="1.6" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-cv" viewBox="0 0 24 24"><path d="M6 2.75h8l4 4V21.25H6z"/><path d="M14 2.75v4h4M9 11h6M9 14.5h6M9 18h3.5"/></symbol>
+  </svg>
+
+  <div class="board">
+    <header class="masthead">
+      <div class="mast-meta mono">
+        <span>Kazi / design board 01</span>
+        <span>16 November 2026</span>
+      </div>
+
+      <div class="mast-grid">
+        <div class="mast-title">
+          <p class="eyebrow mono">Direction · The Steady Hand</p>
+          <h1>The Steady<br>Hand<span class="title-dot">.</span></h1>
+        </div>
+        <div class="mast-note">
+          <p class="lede">A job search that looks after the person doing it.</p>
+          <p>Kazi keeps the next move clear and carries the context. Ink and bone hold almost everything. Cobalt appears only where you can act. Marigold is reserved for time. Nothing asks for attention unless it has a reason.</p>
+        </div>
+      </div>
+
+      <div class="mast-rules">
+        <div><span class="mono">01</span><p>One move in focus. Two smaller next steps.</p></div>
+        <div><span class="mono">02</span><p>Colour carries meaning, never decoration.</p></div>
+        <div><span class="mono">03</span><p>Waiting is a place, not a failure.</p></div>
+      </div>
+    </header>
+
+    <section class="screens" aria-label="Three phone screens">
+
+      <!-- ============================================================ -->
+      <!-- 01 · Today                                                   -->
+      <!-- ============================================================ -->
+      <figure class="board-figure">
+        <div class="phone-slot">
+          <div class="phone" id="today-screen">
+            <div class="screen">
+              <div class="status" aria-hidden="true">
+                <span class="status-time mono">9:41</span>
+                <span class="status-icons">
+                  <svg class="status-signal" viewBox="0 0 18 12"><rect x="0" y="7.5" width="2.5" height="4.5"/><rect x="5" y="5.2" width="2.5" height="6.8"/><rect x="10" y="2.6" width="2.5" height="9.4"/><rect x="15" y="0" width="2.5" height="12"/></svg>
+                  <svg class="status-wifi" viewBox="0 0 16 12"><path d="M1 4.2a10.5 10.5 0 0 1 14 0M3.6 6.8a6.8 6.8 0 0 1 8.8 0M6.2 9.3a3.1 3.1 0 0 1 3.6 0"/><circle cx="8" cy="11.2" r=".9" fill="currentColor" stroke="none"/></svg>
+                  <svg class="status-battery" viewBox="0 0 24 12"><rect x=".5" y=".5" width="20" height="11" rx="2" fill="none"/><rect x="3" y="3" width="14" height="6" stroke="none"/><path d="M22 4v4"/></svg>
+                </span>
+              </div>
+
+              <header class="appbar">
+                <span class="wordmark">kazi<span class="wordmark-dot">.</span></span>
+                <button class="icon-button" type="button" aria-label="Search">
+                  <svg class="icon"><use href="#i-search"></use></svg>
+                </button>
+              </header>
+
+              <main class="screen-body">
+                <section class="today-head" aria-labelledby="today-count">
+                  <div class="today-date mono">
+                    <span>Monday 16 November</span>
+                    <span>2026</span>
+                  </div>
+                  <div class="today-tally">
+                    <span class="tally-number" id="today-count">3</span>
+                    <span class="tally-word">moves</span>
+                    <span class="tally-note mono">1 due today</span>
+                  </div>
+                </section>
+
+                <section class="moves" aria-label="Today's moves">
+                  <article class="move move--focus">
+                    <span class="move-dot move-dot--active" aria-hidden="true"></span>
+                    <div class="move-content">
+                      <div class="move-eyebrow mono">
+                        <span>Needs you · today</span>
+                        <span>2 min</span>
+                      </div>
+                      <h2>Confirm Thursday's interview</h2>
+                      <p class="move-detail">Daniel asked for your availability. Thursday 19 Nov, 10:30, at their offices.</p>
+                      <p class="move-source mono">Kampala Coffee Co. · Data Analyst</p>
+                      <span class="action">Draft confirmation <svg class="icon"><use href="#i-arrow"></use></svg></span>
+                    </div>
+                  </article>
+
+                  <article class="move move--quiet">
+                    <span class="move-dot" aria-hidden="true"></span>
+                    <div class="move-content">
+                      <div class="move-line">
+                        <h3>Ask about the closed research role</h3>
+                        <svg class="icon move-go"><use href="#i-chevron"></use></svg>
+                      </div>
+                      <p class="move-meta">East Africa Policy Institute · closed yesterday · 1 min</p>
+                    </div>
+                  </article>
+
+                  <article class="move move--quiet">
+                    <span class="move-dot" aria-hidden="true"></span>
+                    <div class="move-content">
+                      <div class="move-line">
+                        <h3>Answer the Savanna Labs offer</h3>
+                        <svg class="icon move-go"><use href="#i-chevron"></use></svg>
+                      </div>
+                      <p class="move-meta">Offer received yesterday · reply by Friday · 10 min</p>
+                    </div>
+                  </article>
+                </section>
+
+                <section class="watching">
+                  <div class="watching-head mono">
+                    <span>No reply yet · 2</span>
+                    <span class="watching-line" aria-hidden="true"></span>
+                  </div>
+                  <p>Mango Tree has not replied. Savanna Health shortlists by Friday. Nothing is needed from you yet.</p>
+                  <span class="text-link">Open pipeline <svg class="icon"><use href="#i-arrow"></use></svg></span>
+                </section>
+              </main>
+
+              <nav class="tabbar" aria-label="Main">
+                <span class="tab is-active">
+                  <svg class="icon"><use href="#i-today"></use></svg>
+                  <span>Today</span>
+                </span>
+                <span class="tab">
+                  <svg class="icon"><use href="#i-pipeline"></use></svg>
+                  <span>Pipeline</span>
+                </span>
+                <span class="tab tab--capture" aria-label="Capture">
+                  <span class="capture-button"><svg class="icon"><use href="#i-plus"></use></svg></span>
+                </span>
+                <span class="tab">
+                  <svg class="icon"><use href="#i-cv"></use></svg>
+                  <span>CV</span>
+                </span>
+                <span class="tab">
+                  <svg class="icon"><use href="#i-more"></use></svg>
+                  <span>More</span>
+                </span>
+              </nav>
+              <span class="home-bar" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <figcaption>
+          <span class="fig-index mono">01</span>
+          <span class="fig-title">Today</span>
+          <span class="fig-note">Three moves, ordered by consequence. One action is open.</span>
+        </figcaption>
+      </figure>
+
+      <!-- ============================================================ -->
+      <!-- 02 · Pipeline                                                -->
+      <!-- ============================================================ -->
+      <figure class="board-figure">
+        <div class="phone-slot">
+          <div class="phone" id="pipeline-screen">
+            <div class="screen">
+              <div class="status" aria-hidden="true">
+                <span class="status-time mono">9:41</span>
+                <span class="status-icons">
+                  <svg class="status-signal" viewBox="0 0 18 12"><rect x="0" y="7.5" width="2.5" height="4.5"/><rect x="5" y="5.2" width="2.5" height="6.8"/><rect x="10" y="2.6" width="2.5" height="9.4"/><rect x="15" y="0" width="2.5" height="12"/></svg>
+                  <svg class="status-wifi" viewBox="0 0 16 12"><path d="M1 4.2a10.5 10.5 0 0 1 14 0M3.6 6.8a6.8 6.8 0 0 1 8.8 0M6.2 9.3a3.1 3.1 0 0 1 3.6 0"/><circle cx="8" cy="11.2" r=".9" fill="currentColor" stroke="none"/></svg>
+                  <svg class="status-battery" viewBox="0 0 24 12"><rect x=".5" y=".5" width="20" height="11" rx="2" fill="none"/><rect x="3" y="3" width="14" height="6" stroke="none"/><path d="M22 4v4"/></svg>
+                </span>
+              </div>
+
+              <header class="appbar">
+                <span class="wordmark">kazi<span class="wordmark-dot">.</span></span>
+                <button class="icon-button" type="button" aria-label="Search">
+                  <svg class="icon"><use href="#i-search"></use></svg>
+                </button>
+              </header>
+
+              <main class="screen-body">
+                <div class="page-head">
+                  <div>
+                    <h1 class="page-title">Pipeline</h1>
+                    <p class="page-sub">Grouped by who moves next.</p>
+                  </div>
+                  <span class="page-count mono">8 applications</span>
+                </div>
+
+                <div class="rail" aria-hidden="true">
+                  <span class="rail-line"></span>
+                  <div class="rail-stop">
+                    <span class="rail-dot rail-dot--active"></span>
+                    <span class="rail-count">4</span>
+                    <span class="rail-label mono">Needs you</span>
+                  </div>
+                  <div class="rail-stop">
+                    <span class="rail-dot"></span>
+                    <span class="rail-count">3</span>
+                    <span class="rail-label mono">Waiting</span>
+                  </div>
+                  <div class="rail-stop">
+                    <span class="rail-dot rail-dot--parked"></span>
+                    <span class="rail-count">1</span>
+                    <span class="rail-label mono">Parked</span>
+                  </div>
+                </div>
+
+                <section class="pipe-group">
+                  <div class="pipe-head">
+                    <span class="pipe-name mono"><span class="signal signal--cobalt" aria-hidden="true"></span>Needs you</span>
+                    <span class="pipe-total mono">4</span>
+                  </div>
+
+                  <article class="pipe-row">
+                    <div class="pipe-main">
+                      <h2>Data Analyst</h2>
+                      <p>Kampala Coffee Co. · Daniel asked for confirmation</p>
+                    </div>
+                    <span class="pipe-time mono">Today</span>
+                  </article>
+
+                  <article class="pipe-row">
+                    <div class="pipe-main">
+                      <h2>Research Assistant</h2>
+                      <p>East Africa Policy Institute · closed yesterday</p>
+                    </div>
+                    <span class="pipe-time mono">1 min</span>
+                  </article>
+
+                  <article class="pipe-row">
+                    <div class="pipe-main">
+                      <h2>Product Designer</h2>
+                      <p>Savanna Labs · offer received</p>
+                    </div>
+                    <span class="pipe-time mono">Fri</span>
+                  </article>
+
+                  <article class="pipe-row">
+                    <div class="pipe-main">
+                      <h2>Programme Associate</h2>
+                      <p>Nile Fintech · new, review the advert</p>
+                    </div>
+                    <span class="pipe-time mono">5 days</span>
+                  </article>
+                </section>
+
+                <section class="pipe-group">
+                  <div class="pipe-head">
+                    <span class="pipe-name mono"><span class="signal signal--hollow" aria-hidden="true"></span>Waiting</span>
+                    <span class="pipe-total mono">3</span>
+                  </div>
+
+                  <article class="pipe-row">
+                    <div class="pipe-main">
+                      <h2>Monitoring &amp; Evaluation Officer</h2>
+                      <p>Savanna Health Initiative · shortlist by Friday</p>
+                    </div>
+                    <span class="pipe-time mono">3 days</span>
+                  </article>
+
+                  <article class="pipe-row">
+                    <div class="pipe-main">
+                      <h2>Communications Officer</h2>
+                      <p>Mango Tree Foundation · no reply yet</p>
+                    </div>
+                    <span class="pipe-time mono">12 days</span>
+                  </article>
+
+                  <article class="pipe-row">
+                    <div class="pipe-main">
+                      <h2>Operations Coordinator</h2>
+                      <p>Lakeview Logistics · interview confirmed</p>
+                    </div>
+                    <span class="pipe-time mono">6 days</span>
+                  </article>
+                </section>
+
+                <section class="pipe-group">
+                  <div class="pipe-head">
+                    <span class="pipe-name mono"><span class="signal signal--parked" aria-hidden="true"></span>Parked</span>
+                    <span class="pipe-total mono">1</span>
+                  </div>
+
+                  <article class="pipe-row">
+                    <div class="pipe-main">
+                      <h2>Graduate Trainee</h2>
+                      <p>Lakeview Bank · rejection received</p>
+                    </div>
+                    <span class="pipe-time mono">Closed</span>
+                  </article>
+                </section>
+              </main>
+
+              <nav class="tabbar" aria-label="Main">
+                <span class="tab">
+                  <svg class="icon"><use href="#i-today"></use></svg>
+                  <span>Today</span>
+                </span>
+                <span class="tab is-active">
+                  <svg class="icon"><use href="#i-pipeline"></use></svg>
+                  <span>Pipeline</span>
+                </span>
+                <span class="tab tab--capture" aria-label="Capture">
+                  <span class="capture-button"><svg class="icon"><use href="#i-plus"></use></svg></span>
+                </span>
+                <span class="tab">
+                  <svg class="icon"><use href="#i-cv"></use></svg>
+                  <span>CV</span>
+                </span>
+                <span class="tab">
+                  <svg class="icon"><use href="#i-more"></use></svg>
+                  <span>More</span>
+                </span>
+              </nav>
+              <span class="home-bar" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <figcaption>
+          <span class="fig-index mono">02</span>
+          <span class="fig-title">Pipeline</span>
+          <span class="fig-note">Needs you, waiting, parked. The rail shows the shape of the search.</span>
+        </figcaption>
+      </figure>
+
+      <!-- ============================================================ -->
+      <!-- 03 · Job story                                               -->
+      <!-- ============================================================ -->
+      <figure class="board-figure">
+        <div class="phone-slot">
+          <div class="phone" id="story-screen">
+            <div class="screen">
+              <div class="status" aria-hidden="true">
+                <span class="status-time mono">9:41</span>
+                <span class="status-icons">
+                  <svg class="status-signal" viewBox="0 0 18 12"><rect x="0" y="7.5" width="2.5" height="4.5"/><rect x="5" y="5.2" width="2.5" height="6.8"/><rect x="10" y="2.6" width="2.5" height="9.4"/><rect x="15" y="0" width="2.5" height="12"/></svg>
+                  <svg class="status-wifi" viewBox="0 0 16 12"><path d="M1 4.2a10.5 10.5 0 0 1 14 0M3.6 6.8a6.8 6.8 0 0 1 8.8 0M6.2 9.3a3.1 3.1 0 0 1 3.6 0"/><circle cx="8" cy="11.2" r=".9" fill="currentColor" stroke="none"/></svg>
+                  <svg class="status-battery" viewBox="0 0 24 12"><rect x=".5" y=".5" width="20" height="11" rx="2" fill="none"/><rect x="3" y="3" width="14" height="6" stroke="none"/><path d="M22 4v4"/></svg>
+                </span>
+              </div>
+
+              <header class="appbar appbar--detail">
+                <button class="icon-button" type="button" aria-label="Back to pipeline">
+                  <svg class="icon"><use href="#i-back"></use></svg>
+                </button>
+                <span class="appbar-title mono">Application</span>
+                <button class="icon-button" type="button" aria-label="More actions">
+                  <svg class="icon"><use href="#i-more"></use></svg>
+                </button>
+              </header>
+
+              <main class="screen-body">
+                <div class="job-head">
+                  <div class="job-kicker">
+                    <span class="mono">KZ-031</span>
+                    <span class="job-state mono"><span class="signal signal--marigold" aria-hidden="true"></span>Interview · Thu 19 Nov</span>
+                  </div>
+                  <h1>Data Analyst</h1>
+                  <p class="job-company">Kampala Coffee Co.</p>
+                  <p class="job-facts mono">Kampala · Hybrid · Applied 8 days ago</p>
+                </div>
+
+                <section class="next-move">
+                  <div class="next-top mono">
+                    <span>Next move · today</span>
+                    <span>2 min</span>
+                  </div>
+                  <h2>Confirm Thursday with Daniel</h2>
+                  <p>He asked for your availability and two dashboard examples. A short reply is enough.</p>
+                  <span class="action">Draft confirmation <svg class="icon"><use href="#i-arrow"></use></svg></span>
+                </section>
+
+                <section class="story">
+                  <div class="story-head mono">
+                    <span>The story</span>
+                    <span>5 events</span>
+                  </div>
+                  <ol class="story-list">
+                    <li class="story-item">
+                      <span class="story-date mono">06 Nov</span>
+                      <div class="story-body">
+                        <span class="story-dot" aria-hidden="true"></span>
+                        <h3>Captured from WhatsApp</h3>
+                        <p>Saved with the advert, deadline and source.</p>
+                      </div>
+                    </li>
+                    <li class="story-item">
+                      <span class="story-date mono">08 Nov</span>
+                      <div class="story-body">
+                        <span class="story-dot" aria-hidden="true"></span>
+                        <h3>Applied</h3>
+                        <p>CV v2 and cover letter sent.</p>
+                      </div>
+                    </li>
+                    <li class="story-item">
+                      <span class="story-date mono">15 Nov</span>
+                      <div class="story-body">
+                        <span class="story-dot story-dot--time" aria-hidden="true"></span>
+                        <h3>Interview invitation</h3>
+                        <p>Daniel invited you for Thursday 19 Nov at 10:30. Two dashboard examples requested.</p>
+                      </div>
+                    </li>
+                    <li class="story-item is-now">
+                      <span class="story-date mono">Today</span>
+                      <div class="story-body">
+                        <span class="story-dot story-dot--active" aria-hidden="true"></span>
+                        <h3>Confirm your place</h3>
+                        <p>Waiting on your reply.</p>
+                      </div>
+                    </li>
+                    <li class="story-item">
+                      <span class="story-date mono">19 Nov</span>
+                      <div class="story-body">
+                        <span class="story-dot story-dot--time" aria-hidden="true"></span>
+                        <h3>Interview · 10:30</h3>
+                        <p>With Daniel Okello, People Lead.</p>
+                      </div>
+                    </li>
+                  </ol>
+                </section>
+
+                <section class="job-note">
+                  <span class="mono">For the interview</span>
+                  <p>Two dashboard examples and one data-cleaning story.</p>
+                </section>
+
+                <div class="job-context">
+                  <div class="context-cell">
+                    <span class="mono">Contact</span>
+                    <p>Daniel Okello · People Lead</p>
+                  </div>
+                  <div class="context-cell">
+                    <span class="mono">Documents</span>
+                    <p>CV v2 · Cover letter</p>
+                  </div>
+                </div>
+              </main>
+
+              <nav class="tabbar" aria-label="Main">
+                <span class="tab">
+                  <svg class="icon"><use href="#i-today"></use></svg>
+                  <span>Today</span>
+                </span>
+                <span class="tab is-active">
+                  <svg class="icon"><use href="#i-pipeline"></use></svg>
+                  <span>Pipeline</span>
+                </span>
+                <span class="tab tab--capture" aria-label="Capture">
+                  <span class="capture-button"><svg class="icon"><use href="#i-plus"></use></svg></span>
+                </span>
+                <span class="tab">
+                  <svg class="icon"><use href="#i-cv"></use></svg>
+                  <span>CV</span>
+                </span>
+                <span class="tab">
+                  <svg class="icon"><use href="#i-more"></use></svg>
+                  <span>More</span>
+                </span>
+              </nav>
+              <span class="home-bar" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+        <figcaption>
+          <span class="fig-index mono">03</span>
+          <span class="fig-title">Job story</span>
+          <span class="fig-note">An application as a sequence of events. The next move stays attached.</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="system" aria-label="Design tokens">
+      <div class="system-head">
+        <span class="mono">The system</span>
+        <p>Four colours. Two typefaces. One rule: every signal has a word.</p>
+      </div>
+
+      <div class="system-grid">
+        <div class="system-block">
+          <p class="system-label mono">Ground &amp; signal</p>
+          <div class="swatches">
+            <div class="swatch">
+              <span class="swatch-chip swatch-chip--bone"></span>
+              <span class="swatch-copy"><strong>Bone</strong><span class="mono">#F3F0E6 · ground</span></span>
+            </div>
+            <div class="swatch">
+              <span class="swatch-chip swatch-chip--ink"></span>
+              <span class="swatch-copy"><strong>Ink</strong><span class="mono">#191914 · text</span></span>
+            </div>
+            <div class="swatch">
+              <span class="swatch-chip swatch-chip--cobalt"></span>
+              <span class="swatch-copy"><strong>Cobalt</strong><span class="mono">#2337F5 · action</span></span>
+            </div>
+            <div class="swatch">
+              <span class="swatch-chip swatch-chip--marigold"></span>
+              <span class="swatch-copy"><strong>Marigold</strong><span class="mono">#D98E04 · time only</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="system-block">
+          <p class="system-label mono">Type</p>
+          <div class="type-row">
+            <span class="type-display">Confirm Thursday</span>
+            <span class="type-meta mono">Archivo 600 · 24px · −4.5%</span>
+          </div>
+          <div class="type-row type-row--body">
+            <span>The next move, not the whole search.</span>
+            <span class="type-meta mono">Archivo 400 · 13px</span>
+          </div>
+          <div class="type-row type-row--mono">
+            <span class="mono">MON 16 NOV · KZ-031</span>
+            <span class="type-meta mono">Plex Mono 500 · 9px · +7%</span>
+          </div>
+        </div>
+
+        <div class="system-block">
+          <p class="system-label mono">Signals</p>
+          <ul class="signals">
+            <li><span class="signal signal--cobalt" aria-hidden="true"></span><span><strong>Needs you</strong><em class="mono">a move is open</em></span></li>
+            <li><span class="signal signal--hollow" aria-hidden="true"></span><span><strong>Waiting</strong><em class="mono">no action</em></span></li>
+            <li><span class="signal signal--parked" aria-hidden="true"></span><span><strong>Parked</strong><em class="mono">closed or paused</em></span></li>
+            <li><span class="signal signal--marigold" aria-hidden="true"></span><span><strong>A date</strong><em class="mono">time, never alarm</em></span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer class="board-foot">
+      <span class="mono">Kazi · The Steady Hand</span>
+      <p>Designed for the day after a rejection.</p>
+      <span class="mono">Board 01 / 03 screens</span>
+    </footer>
+  </div>
+</body>
+</html>
