@@ -4,7 +4,9 @@
 
 **Job search, under control.**
 
-**Live:** [kazi-joshuaajuna05-6109s-projects.vercel.app](https://kazi-joshuaajuna05-6109s-projects.vercel.app)
+**Live:** [kazi-joshuaajuna05-6109s-projects.vercel.app](https://kazi-joshuaajuna05-6109s-projects.vercel.app) · **Source:** [github.com/VolumeBrownlee/kazi](https://github.com/VolumeBrownlee/kazi)
+
+[![Checks](https://github.com/VolumeBrownlee/kazi/actions/workflows/ci.yml/badge.svg)](https://github.com/VolumeBrownlee/kazi/actions/workflows/ci.yml)
 
 Kazi is a private, phone-first job application command centre. It captures opportunities from WhatsApp forwards, screenshots and links, then keeps deadlines, replies, interviews, offers and tailored CVs in one calm workspace.
 
@@ -32,7 +34,7 @@ No account. No trackers. Your records stay in the browser on your device. The on
 Kazi is a static site with no build step and no dependencies. It must be served over HTTP(S) — ES modules, the service worker and the share target do not work from `file://`.
 
 ```bash
-cd Kazi
+cd kazi
 npm run serve
 # open http://localhost:4180
 ```
@@ -40,7 +42,7 @@ npm run serve
 If you do not have npm:
 
 ```bash
-cd Kazi
+cd kazi
 python3 -m http.server 4180
 ```
 
@@ -54,15 +56,14 @@ npm test
 
 ## Publish it
 
-Kazi is a static site plus one optional serverless function for AI. Vercel serves both from the `Kazi/` folder.
+Kazi is a static site plus one optional serverless function for AI. The repository root is the Vercel project root.
 
 ```bash
-cd Kazi
 npx vercel
 npx vercel --prod
 ```
 
-Or import the GitHub repository in Vercel and set **Root Directory** to `Kazi`. No build command is needed.
+Or import the GitHub repository in Vercel and leave **Root Directory** at the repository root. No build command is needed.
 
 To enable AI, add these environment variables in Vercel (Project → Settings → Environment Variables), then redeploy:
 
@@ -175,7 +176,7 @@ Because data is local:
 ## Project structure
 
 ```
-Kazi/
+kazi/
 ├── index.html              app shell, navigation, SVG sprite
 ├── styles.css              design system, responsive and print styles
 ├── manifest.webmanifest    PWA metadata, shortcuts, Android share target
@@ -190,6 +191,9 @@ Kazi/
 ├── api/ai.js               server-side AI proxy (no key in the browser)
 ├── tests/parse.test.mjs    14 parser tests
 ├── icons/                  app icon, favicons, social card
+├── CONTRIBUTING.md         setup, checks and contribution rules
+├── LICENSE                 MIT
+├── .github/                issue forms, PR template, CI checks
 └── vercel.json             static routing, security headers, function limit
 ```
 
