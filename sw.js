@@ -1,7 +1,7 @@
 /* Kazi service worker — offline shell, app icons and Android share target.
    Everything stays on the device; this worker never calls an external API. */
 
-const CACHE_NAME = 'kazi-shell-v10';
+const CACHE_NAME = 'kazi-shell-v11';
 const APP_SHELL = [
   './',
   './index.html',

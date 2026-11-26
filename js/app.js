@@ -941,7 +941,7 @@ function viewJobs() {
           <h2>${archived.length ? 'No applications in play.' : 'Your pipeline starts here.'}</h2>
           <p>${archived.length
             ? 'Capture a new role when it arrives. Archived applications stay below.'
-            : 'Paste a WhatsApp message, a link or a screenshot. Kazi pulls out the role, company and deadline.'}</p>
+            : 'Paste a WhatsApp message or link. Kazi reads what it can; you confirm the rest.'}</p>
           <button class="action" type="button" data-action="capture">${icon('plus')} ${archived.length ? 'Capture a job' : 'Capture your first job'}</button>
         </section>`}
 
