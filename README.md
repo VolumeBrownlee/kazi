@@ -16,7 +16,7 @@ No account. No trackers. Your records stay in the browser on your device. The on
 
 ## What it does
 
-- **Capture from anywhere.** Paste a WhatsApp message or job link, attach a screenshot or PDF, and Kazi pulls out the role, company, deadline, location, source and contact details. On Android, Kazi can appear in the system share sheet.
+- **Capture from anywhere.** Paste a WhatsApp message or job link, attach a screenshot or PDF, and Kazi pulls out the role, company, deadline, location, source and contact details when the text contains them. A bare link is read from its URL where possible; Kazi flags anything missing for you to confirm. On Android, Kazi can appear in the system share sheet.
 - **One honest pipeline.** Every application moves through Captured → To apply → Applied → Interviewing → Offer, with a separate closed state for rejections. List and board views, source filters and search stay in sync. Archive a role and restore it from a drawer at the bottom of the pipeline.
 - **Deadlines that speak up.** Today shows what is overdue, due now and waiting on you. The calendar collects deadlines, interviews and follow-ups, and exports to ICS for Google Calendar or your phone.
 - **Replies, decoded.** Paste an email reply and Kazi classifies the intent (interview, rejection, offer, request for information, acknowledgement), extracts dates and suggests the next step. You log it in one tap.

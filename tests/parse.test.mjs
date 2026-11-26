@@ -150,3 +150,77 @@ test('detects sources', () => {
   assert.equal(detectSource('https://wa.me/256700000000'), 'WhatsApp');
   assert.equal(detectSource('', 'A friend sent this on WhatsApp'), 'WhatsApp');
 });
+
+test('parses a link-only LinkedIn job into role and company', () => {
+  const url = 'https://www.linkedin.com/jobs/view/programme-associate-at-nile-fintech-4123456789';
+  const parsed = parseJobMessage(url, { refDate: REF });
+  assert.equal(parsed.role, 'Programme Associate');
+  assert.equal(parsed.company, 'Nile Fintech');
+  assert.equal(parsed.source, 'LinkedIn');
+  assert.equal(parsed.url, url);
+});
+
+test('parses Lever, Workable and BrighterMonday links without inventing fields', () => {
+  const lever = parseLink('https://jobs.lever.co/nile-fintech/123e4567-e89b-12d3-a456-426614174000');
+  assert.equal(lever.company, 'Nile Fintech');
+  assert.equal(lever.role, null);
+
+  const workable = parseLink('https://apply.workable.com/nile-fintech/j/ABC123');
+  assert.equal(workable.company, 'Nile Fintech');
+  assert.equal(workable.role, null);
+
+  const brighter = parseLink('https://www.brightermonday.co.ug/jobs/programme-associate-at-nile-fintech-123456');
+  assert.equal(brighter.company, 'Nile Fintech');
+  assert.equal(brighter.role, 'Programme Associate');
+  assert.notEqual(brighter.company, 'Co');
+});
+
+test('reads a heading-style job message with a slash-separated company', () => {
+  const parsed = parseJobMessage(
+    'Job Opportunity: Monitoring and Evaluation Officer / Savanna Health Initiative — Kampala, Uganda\nDeadline: Friday, 28 November 2026',
+    { refDate: REF }
+  );
+  assert.equal(parsed.role, 'Monitoring and Evaluation Officer');
+  assert.equal(parsed.company, 'Savanna Health Initiative');
+  assert.equal(parsed.location, 'Kampala');
+  assert.equal(parsed.deadline, '2026-11-28');
+});
+
+test('extracts roles written after need or at', () => {
+  const need = parseJobMessage('We need a Sales Executive at XYZ Ltd in Kampala.', { refDate: REF });
+  assert.equal(need.role, 'Sales Executive');
+  assert.equal(need.company, 'XYZ Ltd');
+
+  const at = parseJobMessage('Programme Officer at Relief International. Apply by 30 November 2026.', { refDate: REF });
+  assert.equal(at.role, 'Programme Officer');
+  assert.equal(at.company, 'Relief International');
+  assert.equal(at.deadline, '2026-11-30');
+});
+
+test('does not infer a company from an example email domain', () => {
+  const parsed = parseJobMessage('Send your CV to jobs@example.com by 30 November 2026.', { refDate: REF });
+  assert.equal(parsed.company, null);
+  assert.equal(parsed.deadline, '2026-11-30');
+});
+
+test('does not warn about a missing deadline when the advert is rolling', () => {
+  const parsed = parseJobMessage(
+    'Programme Officer at Relief International. Applications are reviewed on a rolling basis until filled.',
+    { refDate: REF }
+  );
+  assert.equal(parsed.deadline, null);
+  assert.equal(parsed.deadlineConfidence, 'rolling');
+  assert.ok(!parsed.warnings.some(warning => /No deadline found/.test(warning)));
+});
+
+test('labels an offer acceptance date separately from the start date', () => {
+  const result = classifyReply(
+    'We are pleased to offer you the Programme Associate position. Please confirm your acceptance by 20 November 2026. Your start date will be 5 January 2027.',
+    { refDate: REF }
+  );
+  assert.equal(result.intent, 'offer');
+  const acceptance = result.dates.find(date => date.iso === '2026-11-20');
+  const start = result.dates.find(date => date.iso === '2027-01-05');
+  assert.equal(acceptance?.label, 'Response due');
+  assert.equal(start?.label, 'Start date');
+});

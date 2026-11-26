@@ -1330,11 +1330,15 @@ export async function restoreBackup(payload) {
     throw new Error('This does not look like a Kazi backup file.');
   }
   const state = loadStateFromObject(payload.state);
-  await clearFiles();
+  const records = [];
   for (const file of payload.files || []) {
     if (!file.data) continue;
     const blob = await dataURLToBlob(file.data);
-    await putFileRecord({ ...file, blob });
+    records.push({ ...file, blob });
+  }
+  await clearFiles();
+  for (const record of records) {
+    await putFileRecord(record);
   }
   return state;
 }

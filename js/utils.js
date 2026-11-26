@@ -289,8 +289,16 @@ export function blobToDataURL(blob) {
 }
 
 export async function dataURLToBlob(dataUrl) {
-  const response = await fetch(dataUrl);
-  return response.blob();
+  const match = String(dataUrl || '').match(/^data:([^;,]*)?(;base64)?,([\s\S]*)$/);
+  if (!match) throw new Error('That file data is not a valid data URL.');
+  const type = match[1] || 'application/octet-stream';
+  const payload = match[3] || '';
+  const binary = match[2] ? atob(payload) : decodeURIComponent(payload);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+  return new Blob([bytes], { type });
 }
 
 export function readFileAsText(file) {

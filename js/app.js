@@ -2820,6 +2820,7 @@ function parsePreviewHTML(result, usedAI = false) {
   if (result.role) detected.push(['Role', result.role]);
   if (result.company) detected.push(['Company', result.company]);
   if (result.deadline) detected.push(['Deadline', formatDate(result.deadline)]);
+  else if (result.deadlineConfidence === 'rolling') detected.push(['Deadline', 'Rolling']);
   if (result.location) detected.push(['Location', result.location]);
   if (result.salary) detected.push(['Salary', result.salary]);
   if (result.source) detected.push(['Source', result.source]);
@@ -2842,7 +2843,7 @@ function mergeAIParse(local, ai) {
   merged.warnings = [];
   if (!merged.role) merged.warnings.push('No job title found — add it before saving.');
   if (!merged.company) merged.warnings.push('No company found — add it before saving.');
-  if (!merged.deadline) merged.warnings.push('No deadline found — add one so Kazi can chase it.');
+  if (!merged.deadline && merged.deadlineConfidence !== 'rolling') merged.warnings.push('No deadline found — add one so Kazi can chase it.');
   return merged;
 }
 
@@ -3466,7 +3467,7 @@ function onboardingMarkup() {
               <h1>The job hunt is messy.<br><em>Your workspace shouldn't be.</em></h1>
               <p class="onboard-lede">Kazi turns WhatsApp forwards, screenshots and email replies into a calm, deadline-first pipeline — with a CV tailored for every serious application.</p>
               <div class="onboard-points">
-                <div class="onboard-point">${icon('whatsapp')}<span><strong>Capture from anywhere.</strong> Paste a message or link; Kazi finds the role, company and deadline.</span></div>
+                <div class="onboard-point">${icon('whatsapp')}<span><strong>Capture from anywhere.</strong> Paste a message or link; Kazi reads what it can and asks you to confirm the rest.</span></div>
                 <div class="onboard-point">${icon('clock')}<span><strong>Never miss the moment.</strong> Today, calendar and email replies stay in one place.</span></div>
                 <div class="onboard-point">${icon('cv')}<span><strong>One CV per job.</strong> Transparent keyword matching, no black box.</span></div>
                 <div class="onboard-point">${icon('shield')}<span><strong>Private by default.</strong> No account, no tracking. AI is off until you choose it.</span></div>

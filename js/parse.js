@@ -78,6 +78,8 @@ const COMPANY_WORDS = new Set([
   'application', 'candidate', 'applicant', 'successful', 'ideal', 'right', 'suitable'
 ]);
 
+const ROLE_TITLE_WORDS = /\b(officer|manager|associate|executive|assistant|engineer|developer|designer|analyst|coordinator|director|specialist|consultant|intern|graduate|trainee|lead|head|advisor|adviser|administrator|accountant|nurse|teacher|driver|clerk|secretary|technician|supervisor|representative|agent|writer|editor|producer|scientist|researcher|architect|planner|auditor|controller|partner|principal|fellow|volunteer|attache|programmer)\b/i;
+
 const ROLE_STOP_WORDS = [
   'a', 'an', 'the', 'and', 'or', 'of', 'for', 'in', 'at', 'on', 'with', 'who',
   'that', 'dynamic', 'motivated', 'experienced', 'qualified', 'suitable',
@@ -480,23 +482,54 @@ function companyFromHost(host) {
   value = value.replace(/^(careers?|jobs?|apply|hiring|recruit|talent)\./, '');
   const parts = value.split('.');
   if (parts.length < 2) return null;
-  const root = parts[parts.length - 2];
+  let root = parts[parts.length - 2];
+  // brightermonday.co.ug and similar country domains: skip the "co" label.
+  if (parts.length >= 3 && ['co', 'com', 'org', 'net', 'ac', 'gov', 'edu', 'or', 'ne', 'go'].includes(root)) {
+    root = parts[parts.length - 3];
+  }
   if (!root || root.length < 2) return null;
-  if (['greenhouse', 'lever', 'workable', 'ashbyhq', 'myworkdayjobs', 'smartrecruiters', 'bamboohr', 'recruitee', 'teamtailor', 'jobvite', 'icims', 'taleo', 'linkedin', 'indeed', 'brightermonday', 'reliefweb', 'devex', 'unjobs', 'glassdoor', 'google', 'example'].includes(root)) return null;
-  return capitalise(root.replace(/[-_]/g, ' '));
+  if (['greenhouse', 'lever', 'workable', 'ashbyhq', 'myworkdayjobs', 'smartrecruiters', 'bamboohr', 'recruitee', 'teamtailor', 'jobvite', 'icims', 'taleo', 'linkedin', 'indeed', 'brightermonday', 'reliefweb', 'devex', 'unjobs', 'glassdoor', 'google', 'example', 'localhost'].includes(root)) return null;
+  if (/^(?:wd\d+|jobs?|careers?|apply|www)$/.test(root)) return null;
+  return titleCaseWords(root.replace(/[-_]/g, ' '));
+}
+
+function titleCaseWords(value) {
+  const small = new Set(['and', 'or', 'of', 'the', 'for', 'at', 'in', 'with', 'to', 'a', 'an']);
+  return String(value || '')
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word, index) => (index > 0 && small.has(word) ? word : capitalise(word)))
+    .join(' ');
+}
+
+function looksLikeId(segment) {
+  const value = String(segment || '');
+  if (!value) return true;
+  if (/^\d+$/.test(value)) return true;
+  if (/^[0-9a-f]{8}-[0-9a-f-]{8,}$/i.test(value)) return true;
+  if (/^[A-Z0-9]{5,}$/.test(value) && /\d/.test(value)) return true;
+  return false;
 }
 
 function titleFromSlug(slug) {
   const cleaned = decodeURIComponent(String(slug || ''))
     .replace(/\.(html?|php|aspx?)$/i, '')
     .replace(/[-_]+/g, ' ')
-    .replace(/\b\d{3,}\b/g, ' ')
+    .replace(/\b\d{4,}\b/g, ' ')
+    .replace(/\b[0-9a-f]{8,}\b/gi, ' ')
     .replace(/\s+/g, ' ')
     .trim();
   if (!cleaned || cleaned.length < 4) return null;
   if (!/[a-z]/i.test(cleaned)) return null;
   if (cleaned.split(' ').length > 10) return null;
-  return capitalise(cleaned.toLowerCase());
+  return titleCaseWords(cleaned);
+}
+
+function slugRole(segment) {
+  if (!segment || looksLikeId(segment)) return null;
+  if (/^(?:jobs?|careers?|apply|application|view|viewjob|positions?|openings?|vacancies|listings?|en|us|external|internal|details?)$/i.test(segment)) return null;
+  return titleFromSlug(segment);
 }
 
 export function parseLink(url) {
@@ -518,31 +551,106 @@ export function parseLink(url) {
   }
   const host = parsed.hostname.replace(/^www\./, '');
   const segments = parsed.pathname.split('/').filter(Boolean);
+  const lowerHost = host.toLowerCase();
   result.company = companyFromHost(host);
 
-  const lowerHost = host.toLowerCase();
   if (lowerHost.includes('greenhouse.io')) {
     const idx = segments.indexOf('jobs');
-    if (idx > 0) result.company = capitalise(segments[idx - 1].replace(/[-_]/g, ' '));
+    if (idx > 0) result.company = titleCaseWords(segments[idx - 1].replace(/[-_]/g, ' '));
     const last = segments[segments.length - 1];
-    if (last && !/^\d+$/.test(last)) result.role = titleFromSlug(last);
+    result.role = slugRole(last);
   } else if (lowerHost.includes('lever.co')) {
-    if (segments[0]) result.company = capitalise(segments[0].replace(/[-_]/g, ' '));
-    if (segments[1]) result.role = titleFromSlug(segments[1]);
+    if (segments[0]) result.company = titleCaseWords(segments[0].replace(/[-_]/g, ' '));
+    // Modern Lever links end in a UUID; older ones append a readable slug.
+    for (const segment of segments.slice(1)) {
+      const role = slugRole(segment);
+      if (role) result.role = role;
+    }
   } else if (lowerHost.includes('workable.com')) {
-    if (segments[0]) result.company = capitalise(segments[0].replace(/[-_]/g, ' '));
-    if (segments[1]) result.role = titleFromSlug(segments[1]);
+    if (lowerHost.endsWith('.workable.com')) {
+      const tenant = host.split('.')[0];
+      if (!['apply', 'jobs', 'www', 'careers'].includes(tenant)) {
+        result.company = titleCaseWords(tenant.replace(/[-_]/g, ' '));
+      }
+    }
+    const companyIndex = segments[0] === 'view' ? 2 : 0;
+    const companySegment = segments[companyIndex];
+    if (companySegment && !['j', 'view', 'jobs', 'careers'].includes(companySegment.toLowerCase())) {
+      result.company = titleCaseWords(companySegment.replace(/[-_]/g, ' '));
+    }
+    for (const segment of segments) {
+      if (segment.toLowerCase() === 'j' || segment.toLowerCase() === 'view') continue;
+      if (segment === companySegment) continue;
+      const role = slugRole(segment);
+      if (role) result.role = role;
+    }
   } else if (lowerHost.includes('ashbyhq.com') || lowerHost.includes('smartrecruiters.com') || lowerHost.includes('bamboohr.com')) {
-    if (segments[0]) result.company = capitalise(segments[0].replace(/[-_]/g, ' '));
-    if (segments[1]) result.role = titleFromSlug(segments[1]);
+    if (lowerHost.includes('bamboohr.com')) {
+      const tenant = host.split('.')[0];
+      if (tenant && !['www', 'jobs', 'careers'].includes(tenant)) {
+        result.company = titleCaseWords(tenant.replace(/[-_]/g, ' '));
+      }
+      for (const segment of segments.slice(segments.indexOf('jobs') + 1)) {
+        const role = slugRole(segment);
+        if (role) result.role = role;
+      }
+    } else {
+      if (segments[0]) result.company = titleCaseWords(segments[0].replace(/[-_]/g, ' '));
+      result.role = slugRole(segments[1]);
+    }
   } else if (lowerHost.includes('myworkdayjobs.com')) {
-    const company = host.split('.')[0];
-    result.company = capitalise(company.replace(/[-_]/g, ' '));
-  } else if (lowerHost.includes('linkedin.com') || lowerHost.includes('indeed.com')) {
-    // No reliable company or title in the path.
+    const tenant = host.split('.')[0];
+    if (tenant && !/^wd\d+$/.test(tenant)) result.company = titleCaseWords(tenant.replace(/[-_]/g, ' '));
+    const jobIndex = segments.indexOf('job');
+    if (jobIndex >= 0) {
+      for (const segment of segments.slice(jobIndex + 1)) {
+        const role = slugRole(segment.replace(/_[A-Za-z0-9-]+$/, ''));
+        if (role) result.role = role;
+      }
+    }
+  } else if (lowerHost.includes('linkedin.com')) {
+    const viewIndex = segments.indexOf('view');
+    const slug = viewIndex >= 0 ? segments[viewIndex + 1] : null;
+    if (slug) {
+      const atMatch = slug.match(/^(.*?)-at-(.+?)(?:-\d{5,})?$/i);
+      if (atMatch) {
+        result.role = titleFromSlug(atMatch[1]);
+        result.company = titleFromSlug(atMatch[2]);
+      } else {
+        result.role = titleFromSlug(slug.replace(/-\d{5,}$/, ''));
+      }
+    }
+  } else if (lowerHost.includes('indeed.com')) {
+    const jobIndex = segments.indexOf('job');
+    const slug = jobIndex >= 0 ? segments[jobIndex + 1] : null;
+    if (slug) result.role = titleFromSlug(slug);
+    // /viewjob?jk=… has no role or company in the path.
+  } else if (lowerHost.includes('brightermonday')) {
+    const jobIndex = segments.findIndex(segment => /^(jobs?|listings?|vacanc(?:y|ies))$/i.test(segment));
+    const last = segments[segments.length - 1];
+    if (jobIndex >= 0 && last) {
+      const slug = last.replace(/-\d{4,}$/, '');
+      const atMatch = slug.match(/^(.*?)-at-(.+)$/i);
+      if (atMatch) {
+        result.role = titleFromSlug(atMatch[1]);
+        result.company = titleFromSlug(atMatch[2]);
+      } else {
+        result.role = titleFromSlug(slug);
+      }
+    }
+  } else if (lowerHost.includes('teamtailor.com')) {
+    const tenant = host.split('.')[0];
+    if (tenant && tenant !== 'www') result.company = titleCaseWords(tenant.replace(/[-_]/g, ' '));
+    const last = segments[segments.length - 1];
+    if (last) result.role = titleFromSlug(last.replace(/^\d+-/, ''));
+  } else if (lowerHost.includes('recruitee.com')) {
+    const tenant = host.split('.')[0];
+    if (tenant && tenant !== 'www') result.company = titleCaseWords(tenant.replace(/[-_]/g, ' '));
+    const offerIndex = segments.indexOf('o');
+    if (offerIndex >= 0 && segments[offerIndex + 1]) result.role = titleFromSlug(segments[offerIndex + 1]);
   } else if (segments.length) {
     const last = segments[segments.length - 1];
-    const guessed = titleFromSlug(last);
+    const guessed = titleFromSlug(last.replace(/-\d{4,}$/, ''));
     if (guessed && /(job|career|vacanc|position|role|apply)/i.test(parsed.pathname)) result.role = guessed;
   }
   return result;
@@ -779,14 +887,31 @@ export function findReplyDates(text, refDate = new Date()) {
   const value = norm(text);
   const dates = findDates(value, refDate);
   const results = [];
+  const rules = [
+    ['Interview', 3, /\b(interview|meet|call|chat|conversation|schedule|speak with|speak to|next stage|next round)\b/gi],
+    ['Assessment', 3, /\b(assessment|test|assignment|challenge|case study|exercise|task)\b/gi],
+    ['Response due', 3, /\b(accept|acceptance|offer|respond|response|decision|reply|get back|confirm)\b/gi],
+    ['Start date', 3, /\b(start date|start|onboarding|resume|join us|begin)\b/gi],
+    ['Deadline', 1, /\b(deadline|due date|submit|not later than|last date|before|by)\b/gi]
+  ];
   for (const date of dates) {
+    const before = Math.min(80, date.index);
     const context = contextAround(value, date.index, date.raw.length, 80, 80);
+    const center = before + date.raw.length / 2;
     let label = 'Date mentioned';
-    if (/\b(interview|meet|call|chat|conversation|schedule|speak with|speak to|next stage|next round)\b/i.test(context)) label = 'Interview';
-    else if (/\b(assessment|test|assignment|challenge|case study|exercise|task)\b/i.test(context)) label = 'Assessment';
-    else if (/\b(start|onboarding|resume|join us|begin)\b/i.test(context)) label = 'Start date';
-    else if (/\b(respond|response|decision|reply|get back|confirm)\b/i.test(context)) label = 'Response due';
-    else if (/\b(deadline|due|submit|before|by)\b/i.test(context)) label = 'Deadline';
+    let bestScore = 0;
+    for (const [candidate, weight, re] of rules) {
+      re.lastIndex = 0;
+      let match;
+      while ((match = re.exec(context))) {
+        const distance = Math.abs(match.index + match[0].length / 2 - center);
+        const score = weight / (distance + 8);
+        if (score > bestScore) {
+          bestScore = score;
+          label = candidate;
+        }
+      }
+    }
     if (label !== 'Date mentioned') {
       results.push({ ...date, label, context: context.trim() });
     }
@@ -811,20 +936,23 @@ function labeledValue(text, labels) {
 }
 
 export function extractRole(text) {
-  const labeled = labeledValue(text, ['job title', 'position', 'role', 'vacancy', 'title']);
-  if (labeled) return cleanRole(labeled);
+  const labeled = labeledValue(text, ['job title', 'job opportunity', 'job opening', 'position', 'role', 'vacancy', 'title']);
+  if (labeled) return cleanRole(labeled.split(/\s+\/\s+/)[0]);
 
   const patterns = [
     /(?:we(?:'re| are)?\s+)?(?:hiring|recruiting|seeking|looking for|searching for)\s+(?:an\s+|a\s+|the\s+)?([A-Za-z][^\n,.;|]{2,80})/i,
     /(?:vacancy|opening|opportunity|position)\s+(?:for|of)\s+(?:an\s+|a\s+|the\s+)?([^\n,.;|]{2,80})/i,
     /(?:role|position)\s+(?:is|of)\s+(?:an\s+|a\s+|the\s+)?([^\n,.;|]{2,80})/i,
-    /(?:join (?:us|our team) as|work with us as)\s+(?:an\s+|a\s+|the\s+)?([^\n,.;|]{2,80})/i
+    /(?:join (?:us|our team) as|work with us as)\s+(?:an\s+|a\s+|the\s+)?([^\n,.;|]{2,80})/i,
+    /(?:we\s+)?(?:need|require)\s+(?:an?\s+|the\s+)?([A-Z][^\n,.;|]{2,80})/,
+    /^([A-Z][A-Za-z&'’./() -]{2,60})\s+(?:at|with)\s+[A-Z][^\n,.;|]{2,70}/m
   ];
   for (const re of patterns) {
     const match = String(text || '').match(re);
     if (match) {
       const value = cleanRole(match[1]);
-      if (value && !ROLE_STOP_WORDS.includes(value.toLowerCase())) return value;
+      const words = value ? value.split(/\s+/).length : 0;
+      if (value && !ROLE_STOP_WORDS.includes(value.toLowerCase()) && (words >= 2 || ROLE_TITLE_WORDS.test(value))) return value;
     }
   }
   return null;
@@ -873,6 +1001,8 @@ export function extractCompany(text, role = null) {
       const cleaned = cleanCompany(atMatch[1]);
       if (cleaned) return cleaned;
     }
+    const heading = companyFromHeading(value, role);
+    if (heading) return heading;
   }
 
   const candidates = [];
@@ -898,7 +1028,7 @@ export function extractCompany(text, role = null) {
   const emails = extractEmails(value);
   for (const email of emails) {
     const domain = email.split('@')[1]?.toLowerCase();
-    if (domain && !FREE_EMAIL_DOMAINS.has(domain)) {
+    if (domain && !FREE_EMAIL_DOMAINS.has(domain) && !isReservedDomain(domain)) {
       const root = domain.split('.')[0];
       if (root && root.length > 2) {
         const cleaned = cleanCompany(root.replace(/[-_]/g, ' '));
@@ -911,6 +1041,33 @@ export function extractCompany(text, role = null) {
   for (const candidate of candidates) {
     if (role && candidate.value.toLowerCase() === role.toLowerCase()) continue;
     return candidate.value;
+  }
+  return null;
+}
+
+function isReservedDomain(domain) {
+  return /(?:^|\.)(?:example|test|invalid|localhost|local)(?:\.|$)/i.test(domain)
+    || /\.(?:example|test|invalid)$/i.test(domain);
+}
+
+function companyFromHeading(value, role) {
+  const lines = String(value || '').split(/\n+/);
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (!line.toLowerCase().includes(role.toLowerCase())) continue;
+    const parts = line.split(/\s+[\/—–|]\s+/).map(part => part.trim()).filter(Boolean);
+    const roleIndex = parts.findIndex(part => part.toLowerCase().includes(role.toLowerCase()));
+    const sameLine = roleIndex >= 0 ? parts[roleIndex + 1] : null;
+    const nextLine = lines[index + 1] ? lines[index + 1].split(/\s+[\/—–|]\s+/)[0] : null;
+    for (const candidate of [sameLine, nextLine]) {
+      if (!candidate) continue;
+      const cleaned = cleanCompany(candidate);
+      if (!cleaned) continue;
+      if (CITIES.some(city => city.toLowerCase() === cleaned.toLowerCase())) continue;
+      if (cleaned.split(/\s+/).length >= 2 || /(?:ltd|limited|inc|llc|plc|foundation|group|company|institute|agency|initiative|bank|university|hospital|ngo|trust)$/i.test(cleaned)) {
+        return cleaned;
+      }
+    }
   }
   return null;
 }
@@ -1011,8 +1168,9 @@ export function parseJobMessage(rawText, { refDate = new Date() } = {}) {
   const applicationEmail = pickApplicationEmail(emails);
   const phones = extractPhones(text);
   const deadline = findDeadline(text, refDate);
-  const role = extractRole(text);
-  const company = extractCompany(text, role);
+  const link = url ? parseLink(url) : null;
+  const role = extractRole(text) || link?.role || null;
+  const company = extractCompany(text, role) || link?.company || null;
   const locationInfo = extractLocation(text);
   const salary = extractSalary(text);
   const source = detectSource(url, text);
@@ -1027,7 +1185,7 @@ export function parseJobMessage(rawText, { refDate = new Date() } = {}) {
   const warnings = [];
   if (!role) warnings.push('No job title found — add it before saving.');
   if (!company) warnings.push('No company found — add it before saving.');
-  if (!deadline || !deadline.iso) warnings.push('No deadline found — add one so Kazi can chase it.');
+  if (!deadline) warnings.push('No deadline found — add one so Kazi can chase it.');
 
   return {
     role,
@@ -1073,9 +1231,9 @@ function scoreRules(text, rules) {
 
 function extractContactName(text) {
   const patterns = [
-    /(?:kind regards|best regards|warm regards|regards|sincerely|best wishes|thanks|thank you)[,\s]*\n+\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/,
-    /(?:my name is|i am|this is)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/,
-    /(?:from|signed)[,:]?\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/
+    /(?:kind regards|best regards|warm regards|regards|sincerely|best wishes|thanks|thank you)[, \t]*\n+[ \t]*([A-Z][a-z]+(?:[ \t]+[A-Z][a-z]+){0,2})/,
+    /(?:my name is|i am|this is)[ \t]+([A-Z][a-z]+(?:[ \t]+[A-Z][a-z]+){0,2})/,
+    /(?:from|signed)[,:]?[ \t]+([A-Z][a-z]+(?:[ \t]+[A-Z][a-z]+){0,2})/
   ];
   for (const re of patterns) {
     const match = text.match(re);
